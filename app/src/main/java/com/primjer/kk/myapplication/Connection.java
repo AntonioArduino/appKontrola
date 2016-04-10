@@ -51,6 +51,8 @@ public class Connection extends Activity {
 
         setContentView(R.layout.activity_main);
 
+        //test
+
         gore = (ImageButton) findViewById(R.id.imageButton);
         dolje = (ImageButton) findViewById(R.id.imageButton3);
         lijevo = (ImageButton) findViewById(R.id.imageButton4);
