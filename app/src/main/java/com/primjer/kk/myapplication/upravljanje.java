@@ -341,7 +341,9 @@ public class upravljanje extends Activity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
 
+    }
 
-}
+
+
 
 

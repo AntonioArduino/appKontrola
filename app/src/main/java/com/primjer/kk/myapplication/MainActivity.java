@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -21,14 +22,14 @@ import android.widget.ToggleButton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static  TextView myLabel;
-    private static EditText myTextbox;
+    private static TextView myLabel;
     private static BluetoothAdapter mBluetoothAdapter;
     private static BluetoothSocket mmSocket;
     private static BluetoothDevice mmDevice;
@@ -38,21 +39,23 @@ public class MainActivity extends AppCompatActivity {
     private static byte[] readBuffer;
     Context mContext = this;
     private static int readBufferPosition;
-    private static int counter;
     private static volatile boolean stopWorker;
     private static boolean connected=false;
+    private ListView listView;
+    private ArrayList<String> mDeviceList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        listView = (ListView) findViewById(R.id.listView);
         Button openButton = (Button)findViewById(R.id.open);
         Button closeButton = (Button)findViewById(R.id.close);
         Button upravljanje = (Button)findViewById(R.id.upravljanje);
         myLabel = (TextView)findViewById(R.id.label);
 
-
+        enableBT();
         openButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
@@ -85,6 +88,23 @@ public class MainActivity extends AppCompatActivity {
 
         });}
 
+    void enableBT(){
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!mBluetoothAdapter.isEnabled()){
+            Intent intentBtEnabled = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            int REQUEST_ENABLE_BT = 1;
+            startActivityForResult(intentBtEnabled, REQUEST_ENABLE_BT);
+        }
+    }
+    public void disableBT(){
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter.isEnabled()){
+            Intent intentBtEnabled = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            int REQUEST_ENABLE_BT = 0;
+            startActivityForResult(intentBtEnabled, REQUEST_ENABLE_BT);
+
+        }
+    }
 
     void findBT() {
 
@@ -96,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(mBluetoothAdapter == null) {
-            myLabel.setText("No bluetooth adapter available");
+            myLabel.setText("Nepostojeci bluetooth adapter");
         }
 
         if(!mBluetoothAdapter.isEnabled()) {
@@ -113,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        myLabel.setText("Bluetooth Device Found");
+        myLabel.setText("Bluetooth je pronasao uredaj");
     }
 
     static void openBT() throws IOException {
@@ -123,13 +143,13 @@ public class MainActivity extends AppCompatActivity {
         mmOutputStream = mmSocket.getOutputStream();
         mmInputStream = mmSocket.getInputStream();
         beginListenForData();
-        myLabel.setText("Bluetooth Opened");
+        myLabel.setText("Bluetooth otvoren");
         connected = true;
     }
 
     static void beginListenForData() {
         final Handler handler = new Handler();
-        final byte delimiter = 10; //This is the ASCII code for a newline character
+        final byte delimiter = 10;
 
         stopWorker = false;
         readBufferPosition = 0;
@@ -175,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
     static void sendData(Character s) throws IOException {
         Character msg = s;
         mmOutputStream.write(msg);
-       // mmOutputStream.write('A');
 
     }
 
@@ -185,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
         mmOutputStream.close();
         mmInputStream.close();
         mmSocket.close();
-        myLabel.setText("Bluetooth Closed");
+        myLabel.setText("Bluetooth zatvoren");
     }
 
     void upravljanje() throws IOException {
@@ -203,17 +222,12 @@ public class MainActivity extends AppCompatActivity {
 
             Toast.makeText(mContext, "Bluetooth nije spojen.",
                     Toast.LENGTH_LONG).show();
-
-
         }
-
-
         }
-
-
     private void showMessage(String theMsg) {
         Toast msg = Toast.makeText(getBaseContext(), theMsg, Toast.LENGTH_LONG);
         msg.show();
     }
 
-}
+    }
+
