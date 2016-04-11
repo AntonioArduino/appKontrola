@@ -42,10 +42,5 @@
         android:layout_weight="0.20"
         android:background="#ff2d2d" />
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="104dp"
-        android:id="@+id/listView" />
-
 
 </LinearLayout>
