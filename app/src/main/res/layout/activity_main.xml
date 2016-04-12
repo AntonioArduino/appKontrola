@@ -33,15 +33,6 @@
         android:text="Close"
         />
 
-    <Button
-        android:layout_width="206dp"
-        android:layout_height="wrap_content"
-        android:text="upravljanje"
-        android:id="@+id/upravljanje"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.20"
-        android:background="#ff2d2d" />
-
     <ListView
         android:layout_width="match_parent"
         android:layout_height="254dp"
